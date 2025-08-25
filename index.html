@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cute Doll Dance — Tisa Intro</title>
+  <style>
+    :root{
+      --bg1:#ffe6f2;  /* light pink */
+      --bg2:#e6f7ff;  /* light blue */
+      --skin:#ffddb5;
+      --hair:#3c2a20;
+      --dress1:#ff76a5; /* main dress */
+      --dress2:#ffd1e1; /* trim */
+      --accent:#ff4d88;
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+
+    .theme-2{ --bg1:#fff5d6; --bg2:#e8ffe8; --dress1:#6ecb63; --dress2:#c6f5bf; --accent:#49a84a; --hair:#2a2a2a; }
+    .theme-3{ --bg1:#f0e6ff; --bg2:#e6fff7; --dress1:#7a6cf0; --dress2:#cfc7ff; --accent:#5a49d8; --hair:#1d2233; }
+
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:#222;
+      background: radial-gradient(120% 120% at 0% 0%, var(--bg1), transparent 70%),
+                  radial-gradient(120% 120% at 100% 100%, var(--bg2), transparent 70%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      background-size: 200% 200%;
+      animation: bgFloat 12s ease-in-out infinite alternate;
+    }
+    @keyframes bgFloat{ from{ background-position: 0% 0% } to{ background-position: 100% 100% } }
+
+    .wrap{ height:100%; display:grid; place-items:center; padding: clamp(16px, 4vw, 40px); }
+
+    .card{ position:relative; width:min(780px, 92vw); border-radius: 24px; background: rgba(255,255,255,.7); backdrop-filter: blur(8px); box-shadow: var(--shadow); overflow:hidden; }
+
+    .toolbar{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(0,0,0,.06); background: linear-gradient(to bottom, rgba(255,255,255,.9), rgba(255,255,255,.6)); }
+    .toolbar .left, .toolbar .right{ display:flex; gap:10px; align-items:center }
+
+    .btn{ appearance:none; border:none; cursor:pointer; border-radius:14px; padding:10px 14px; font-weight:600; background: white; box-shadow: 0 6px 16px rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease, background .2s; }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,.12) }
+    .btn:active{ transform: translateY(0) scale(.98) }
+    .btn.primary{ background: var(--dress2); color:#2b2b2b }
+    .btn.accent{ background: var(--accent); color:white }
+
+    .scene{ position:relative; height: 540px; display:grid; place-items:center; isolation:isolate; }
+
+    .stage-shadow{ position:absolute; bottom:46px; left:50%; translate:-50% 0; width: 240px; height:28px; background: radial-gradient(50% 60% at 50% 50%, rgba(0,0,0,.25), transparent 70%); filter: blur(3px); opacity:.25; }
+
+    .bubble{ position:absolute; top:60px; left:50%; translate:-50% 0; max-width:min(82%, 520px); background:white; border-radius: 18px; padding: 10px 16px; box-shadow: var(--shadow); font-size: clamp(18px, 2.4vw, 24px); font-weight:700; color:#111; display:flex; align-items:center; gap:10px; }
+    .bubble::after{ content:""; position:absolute; bottom:-12px; left: 50%; translate:-50% 0; width:18px; height:18px; rotate:45deg; background:white; box-shadow: 4px 4px 12px rgba(0,0,0,.06); }
+    .bubble .heart{ width:20px; height:20px; display:inline-block; position:relative; }
+    .bubble .heart::before, .bubble .heart::after{ content:""; position:absolute; width:10px; height:16px; background:var(--accent); border-radius: 10px 10px 0 0; top:2px; left:50%; transform-origin: bottom center; }
+    .bubble .heart::before{ transform: translateX(-100%) rotate(-45deg) }
+    .bubble .heart::after{ transform: translateX(0) rotate(45deg) }
+
+    .hearts{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .heart-float{ position:absolute; width:16px; height:16px; opacity:0; filter: drop-shadow(0 6px 10px rgba(0,0,0,.12)); animation: floatUp linear forwards; }
+    @keyframes floatUp{ 0%{ transform: translateY(20px) scale(.7); opacity:0 } 10%{ opacity:1 } 90%{ opacity:1 } 100%{ transform: translateY(-120vh) scale(1.3); opacity:0 } }
+
+    .doll-wrap{ position:relative; margin-top:40px; }
+    svg#doll{ width:min(320px, 70vw); height:auto; overflow:visible; }
+    #doll *{ transform-box: fill-box; transform-origin: center; }
+
+    .is-playing #group-body{ animation: sway 1.25s ease-in-out infinite }
+    .is-playing #armL{ animation: armWaveL 1.2s ease-in-out infinite }
+    .is-playing #armR{ animation: armWaveR 1.2s ease-in-out infinite reverse }
+    .is-playing #legL{ animation: stepL 1.25s ease-in-out infinite }
+    .is-playing #legR{ animation: stepR 1.25s ease-in-out infinite }
+    .is-playing #head{ animation: headBob .9s ease-in-out infinite }
+
+    @keyframes sway{ 0%,100%{ transform: rotate(-6deg) } 50%{ transform: rotate(6deg) } }
+    @keyframes armWaveL{ 0%,100%{ transform: rotate(22deg) } 50%{ transform: rotate(-36deg) } }
+    @keyframes armWaveR{ 0%,100%{ transform: rotate(-22deg) } 50%{ transform: rotate(36deg) } }
+    @keyframes stepL{ 0%,100%{ transform: translateY(0) rotate(6deg) } 50%{ transform: translateY(-8px) rotate(-4deg) } }
+    @keyframes stepR{ 0%,100%{ transform: translateY(-8px) rotate(-6deg) } 50%{ transform: translateY(0) rotate(4deg) } }
+    @keyframes headBob{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-3px) } }
+
+    #armL{ transform-origin: 100% 10% }
+    #armR{ transform-origin: 0% 10% }
+    #legL{ transform-origin: 50% 0% }
+    #legR{ transform-origin: 50% 0% }
+    #group-body{ transform-origin: 50% 60% }
+
+    .controls{ position:absolute; bottom:6px; left:50%; translate:-50% 0; display:flex; gap:10px; }
+
+    .pill{ padding:10px 14px; background: rgba(255,255,255,.85); border-radius: 999px; box-shadow: var(--shadow); display:inline-flex; align-items:center; gap:10px; font-weight:600; }
+
+    input[type="text"]{ border:none; outline: none; padding: 10px 12px; border-radius:12px; min-width: 220px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 6px 12px rgba(0,0,0,.06); background:white; }
+
+    .footer{ text-align:center; padding: 12px 16px 18px; color:#555; font-size:14px }
+    .footer a{ color: var(--accent); font-weight:700; text-decoration:none }
+
+    @media (prefers-reduced-motion: reduce){
+      .is-playing #group-body, .is-playing #armL, .is-playing #armR, .is-playing #legL, .is-playing #legR, .is-playing #head { animation-duration: 2.4s }
+      .heart-float{ animation-duration: 8s }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap theme-1" id="root">
+    <div class="card">
+      <div class="toolbar" role="region" aria-label="controls">
+        <div class="left">
+          <button class="btn accent" id="toggleBtn" aria-pressed="true">⏸️ Pause dance</button>
+          <button class="btn primary" id="themeBtn">🎨 Change outfit</button>
+          <button class="btn" id="burstBtn">💖 More hearts</button>
+        </div>
+        <div class="right">
+          <span class="pill">Tip: click anywhere to send a heart ✨</span>
+        </div>
+      </div>
+
+      <div class="scene is-playing" id="scene">
+        <div class="bubble" aria-live="polite"><span class="heart" aria-hidden="true"></span><span id="message"></span><span class="heart" aria-hidden="true"></span></div>
+        <div class="hearts" id="hearts"></div>
+        <div class="doll-wrap">
+          <svg id="doll" viewBox="0 0 220 300" aria-labelledby="title desc" role="img">
+            <title id="title">Cute dancing doll</title>
+            <desc id="desc">A cute cartoon doll happily dancing.</desc>
+
+            <g id="hairBack">
+              <ellipse cx="110" cy="72" rx="48" ry="42" fill="var(--hair)" />
+            </g>
+
+            <g id="head">
+              <circle cx="110" cy="64" r="36" fill="var(--skin)" stroke="#00000010" />
+              <path d="M74,62 C86,38 134,38 146,62 Q110,52 74,62 Z" fill="var(--hair)"/>
+              <circle cx="96" cy="66" r="4" fill="#333" />
+              <circle cx="124" cy="66" r="4" fill="#333" />
+              <path d="M98,80 Q110,90 122,80" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="86" cy="76" r="4" fill="#ffb3c7" opacity=".8"/>
+              <circle cx="134" cy="76" r="4" fill="#ffb3c7" opacity=".8"/>
+              <g transform="translate(132,48)">
+                <path d="M0,0 L12,6 L0,12 Z" fill="var(--dress1)"/>
+                <path d="M0,0 L-12,6 L0,12 Z" fill="var(--dress2)"/>
+                <circle cx="0" cy="6" r="3" fill="var(--accent)"/>
+              </g>
+            </g>
+
+            <g id="group-body">
+              <g id="body">
+                <rect x="86" y="100" width="48" height="56" rx="14" fill="var(--dress1)" />
+                <rect x="82" y="148" width="56" height="16" rx="8" fill="var(--dress2)" />
+              </g>
+
+              <g id="armL">
+                <rect x="66" y="108" width="24" height="10" rx="5" fill="var(--dress1)" />
+                <circle cx="66" cy="113" r="6" fill="var(--skin)" />
+                <rect x="52" y="108" width="16" height="10" rx="5" fill="var(--skin)" />
+              </g>
+              <g id="armR">
+                <rect x="130" y="108" width="24" height="10" rx="5" fill="var(--dress1)" />
+                <circle cx="154" cy="113" r="6" fill="var(--skin)" />
+                <rect x="160" y="108" width="16" height="10" rx="5" fill="var(--skin)" />
+              </g>
+
+              <g id="legL">
+                <rect x="96" y="164" width="12" height="44" rx="6" fill="#f2b8cd" />
+                <rect x="92" y="206" width="20" height="10" rx="6" fill="#333" />
+              </g>
+              <g id="legR">
+                <rect x="116" y="164" width="12" height="44" rx="6" fill="#f2b8cd" />
+                <rect x="112" y="206" width="20" height="10" rx="6" fill="#333" />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="stage-shadow" aria-hidden="true"></div>
+
+        <div class="controls">
+          <div class="pill">
+            <label for="msg">Message:</label>
+            <input id="msg" type="text" value="I love you" aria-label="Message text" />
+            <button class="btn" id="applyMsg">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">Made with 💝 for you. — <a href="#" id="reset">reset</a></div>
+    </div>
+  </div>
+
+  <script>
+    const scene = document.getElementById('scene');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const burstBtn = document.getElementById('burstBtn');
+    const heartsLayer = document.getElementById('hearts');
+    const messageSpan = document.getElementById('message');
+    const input = document.getElementById('msg');
+    const applyMsg = document.getElementById('applyMsg');
+    const resetLink = document.getElementById('reset');
+    const root = document.getElementById('root');
+
+    let playing = true;
+    let themeIndex = 1;
+
+    toggleBtn.addEventListener('click', () => {
+      playing = !playing;
+      scene.classList.toggle('is-playing', playing);
+      toggleBtn.textContent = playing ? '⏸️ Pause dance' : '▶️ Dance!';
+      toggleBtn.setAttribute('aria-pressed', String(playing));
+    });
+
+    themeBtn.addEventListener('click', () => {
+      themeIndex = (themeIndex % 3) + 1;
+      root.classList.remove('theme-1','theme-2','theme-3');
+      root.classList.add(`theme-${themeIndex}`);
+    });
+
+    function typewriter(text){
+      const speed = 65; // ms per char
+      return new Promise(resolve => {
+        messageSpan.textContent = '';
+        const chars = [...text];
+        chars.forEach((ch, i) => setTimeout(() => {
+          messageSpan.textContent += ch;
+          if(i === chars.length - 1){ setTimeout(resolve, 250); }
+        }, i*speed));
+      });
+    }
+
+    applyMsg.addEventListener('click', async () => {
+      const val = input.value.trim() || 'I love you';
+      await typewriter(val);
+      popHearts(6);
+    });
+
+    function spawnHeart(x=null){
+      const h = document.createElement('div');
+      h.className = 'heart-float';
+      const size = 16 + Math.random()*18;
+      const left = x !== null ? x : Math.random()*heartsLayer.clientWidth;
+      const duration = 3 + Math.random()*3.5;
+      h.style.width = h.style.height = size + 'px';
+      h.style.left = left + 'px';
+      h.style.bottom = '-8px';
+      h.style.animationDuration = duration + 's';
+      h.innerHTML = `<svg viewBox="0 0 32 29" width="100%" height="100%" aria-hidden="true"><path fill="var(--accent)" d="M23.6,0c-2.5,0-4.7,1.2-6,3C16.1,1.2,13.9,0,11.4,0C6.8,0,3,3.8,3,8.4c0,9.1,13.1,13.4,14.6,20.1c1.6-6.7,14.6-11,14.6-20.1C32.2,3.8,28.4,0,23.6,0z"/></svg>`;
+      heartsLayer.appendChild(h);
+      h.addEventListener('animationend', () => h.remove());
+    }
+
+    function popHearts(n=10){
+      const width = heartsLayer.clientWidth;
+      for(let i=0;i<n;i++) setTimeout(()=> spawnHeart(Math.random()*width), i*120);
+    }
+
+    scene.addEventListener('pointerdown', (e) => {
+      const rect = heartsLayer.getBoundingClientRect();
+      spawnHeart(e.clientX - rect.left);
+    });
+
+    burstBtn.addEventListener('click', () => popHearts(14));
+
+    resetLink.addEventListener('click', (e)=>{
+      e.preventDefault();
+      input.value = 'I love you';
+      messageSpan.textContent = 'I love you';
+      if(!playing) toggleBtn.click();
+      root.className = 'wrap theme-1';
+      popHearts(8);
+    });
+
+    // Intro: say hi first, then the love line, then hearts
+    window.addEventListener('load', async () => {
+      scene.classList.add('is-playing');
+      await typewriter('Hi, my name is Tisa.');
+      await typewriter('I love you');
+      popHearts(10);
+    });
+  </script>
+</body>
+</html>
